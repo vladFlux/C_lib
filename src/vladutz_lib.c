@@ -1,2 +1,2 @@
-#include "../include/vladutz_lib.h"
+#include <vladutz_lib.h>
 
