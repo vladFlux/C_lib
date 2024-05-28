@@ -1,8 +1,8 @@
 #ifndef OS_2_PROJECT_IO_UTILS_H
 #define OS_2_PROJECT_IO_UTILS_H
 
-#include <stddef.h>
-#include <unistd.h>
+#include <sys/types.h>
+
 
 ssize_t vladutz_read(int fd, void *buffer, size_t count);
 

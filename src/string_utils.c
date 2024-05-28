@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 char *vladutz_strcat(char *dest, const char *src) {
     char *dest_ptr = dest + strlen(dest);
     while (*src != '\0') {

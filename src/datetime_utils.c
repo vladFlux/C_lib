@@ -1,5 +1,4 @@
 #include "datetime_utils.h"
-#include <stdio.h>
 
 void vladutz_get_current_time(struct tm *timeinfo) {
     time_t rawtime;

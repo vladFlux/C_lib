@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
+
 void *vladutz_malloc(size_t size);
 
 void *vladutz_calloc(size_t num, size_t size);

@@ -1,40 +1,28 @@
 #include "threading.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-#include <sys/types.h>
-
-#define STACK_SIZE 65536
 
 
-static void vladutz_thread_entry(int tid, void *(*start_routine)(void *), void *arg) {
-    start_routine(arg);
-    syscall(SYS_exit, 0);
+static void *vladutz_thread_entry(void *arg) {
+    vladutz_thread_t *thread = (vladutz_thread_t *) arg;
+    return thread->start_routine(thread->arg);
 }
 
 int vladutz_create_thread(vladutz_thread_t *thread, void *(*start_routine)(void *), void *arg) {
-    void *stack = malloc(STACK_SIZE);
-    if (stack == NULL) {
-        perror("malloc");
+    thread->start_routine = start_routine;
+    thread->arg = arg;
+
+    if (pthread_create(&thread->tid, NULL, vladutz_thread_entry, thread) != 0) {
+        perror("pthread_create");
         return -1;
     }
 
-    int tid = clone(vladutz_thread_entry, (char *) stack + STACK_SIZE,
-                    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD, thread->thread_id, start_routine,
-                    arg);
-    if (tid == -1) {
-        perror("clone");
-        free(stack);
-        return -1;
-    }
-
-    thread->thread_id = tid;
     return 0;
 }
 
 int vladutz_join_thread(vladutz_thread_t *thread, void **retval) {
-    return waitpid(thread->thread_id, NULL, 0);
+    return pthread_join(thread->tid, retval);
 }
 
 void vladutz_mutex_init(vladutz_mutex_t *mutex) {

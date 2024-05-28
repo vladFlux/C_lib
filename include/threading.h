@@ -1,13 +1,15 @@
-#ifndef OS_2_PROJECT_THREADING_H
-#define OS_2_PROJECT_THREADING_H
+#ifndef THREAD_UTILS_H
+#define THREAD_UTILS_H
 
-#include <stddef.h>
+#include <pthread.h>
+
 
 typedef struct {
+    pthread_t tid;
+
     void *(*start_routine)(void *);
 
     void *arg;
-    int thread_id;
 } vladutz_thread_t;
 
 typedef struct {
@@ -24,4 +26,4 @@ void vladutz_mutex_lock(vladutz_mutex_t *mutex);
 
 void vladutz_mutex_unlock(vladutz_mutex_t *mutex);
 
-#endif //OS_2_PROJECT_THREADING_H
+#endif // THREAD_UTILS_H

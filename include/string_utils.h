@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
+
 char *vladutz_strcat(char *dest, const char *src);
 
 char *vladutz_substr(const char *str, size_t start, size_t length);

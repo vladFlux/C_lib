@@ -3,6 +3,7 @@
 
 #include <time.h>
 
+
 void vladutz_get_current_time(struct tm *timeinfo);
 
 char *vladutz_format_time(const struct tm *timeinfo, const char *format);
