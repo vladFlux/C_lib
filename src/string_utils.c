@@ -1,5 +1,8 @@
 #include "string_utils.h"
-
+#include "mem_manage.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
 char *vladutz_strcat(char *dest, const char *src) {
     char *dest_ptr = dest + strlen(dest);
@@ -15,7 +18,7 @@ char *vladutz_substr(const char *str, size_t start, size_t length) {
         return NULL;
     }
 
-    char *substr = (char *) malloc((length + 1) * sizeof(char));
+    char *substr = (char *) vladutz_malloc((length + 1) * sizeof(char));
     if (!substr) {
         return NULL;
     }
