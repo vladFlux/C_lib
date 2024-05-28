@@ -3,5 +3,6 @@
 
 #include "mem_manage.h"
 #include "string_utils.h"
+#include "io_utils.h"
 
 #endif //OS_2_PROJECT_VLADUTZ_LIB_H
