@@ -1,73 +1,52 @@
 #include "network.h"
-#include "network_utils.h"
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
-
-int vladutz_create_server_socket(int port) {
-    int server_socket;
-    struct sockaddr_in server_address;
-
-    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+int vladutz_socket() {
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1) {
         perror("socket");
-        return -1;
+        exit(EXIT_FAILURE);
     }
+    return sockfd;
+}
 
-    server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = INADDR_ANY;
-    server_address.sin_port = htons(port);
+int vladutz_bind(int sockfd, int port) {
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(port);
 
-    if (bind(server_socket, (struct sockaddr *) &server_address, sizeof(server_address)) == -1) {
+    if (bind(sockfd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
         perror("bind");
-        close(server_socket);
-        return -1;
+        close(sockfd);
+        exit(EXIT_FAILURE);
     }
+    return 0;
+}
 
-    if (listen(server_socket, 3) == -1) {
+int vladutz_listen(int sockfd) {
+    if (listen(sockfd, VLADUTZ_BACKLOG) == -1) {
         perror("listen");
-        close(server_socket);
-        return -1;
+        close(sockfd);
+        exit(EXIT_FAILURE);
     }
-
-    return server_socket;
+    return 0;
 }
 
-int vladutz_accept_connection(int server_socket) {
-    int client_socket;
-    struct sockaddr_in client_address;
-    int addrlen = sizeof(client_address);
-
-    if ((client_socket = accept(server_socket, (struct sockaddr *) &client_address, (socklen_t * ) & addrlen)) == -1) {
+int vladutz_accept(int sockfd) {
+    struct sockaddr_in addr;
+    socklen_t addr_len = sizeof(addr);
+    int client_sockfd = accept(sockfd, (struct sockaddr *) &addr, &addr_len);
+    if (client_sockfd == -1) {
         perror("accept");
-        return -1;
+        close(sockfd);
+        exit(EXIT_FAILURE);
     }
-
-    return client_socket;
-}
-
-int vladutz_receive_data(int socket, char *buffer, int buffer_size) {
-    int bytes_received;
-
-    if ((bytes_received = recv(socket, buffer, buffer_size, 0)) == -1) {
-        perror("recv");
-        return -1;
-    }
-
-    return bytes_received;
-}
-
-int vladutz_send_data(int socket, const char *data, int data_length) {
-    int bytes_sent;
-
-    if ((bytes_sent = send(socket, data, data_length, 0)) == -1) {
-        perror("send");
-        return -1;
-    }
-
-    return bytes_sent;
-}
-
-void vladutz_close_socket(int socket) {
-    close(socket);
+    return client_sockfd;
 }

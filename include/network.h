@@ -1,17 +1,18 @@
 #ifndef OS_2_PROJECT_NETWORK_H
 #define OS_2_PROJECT_NETWORK_H
 
-#include <netinet/in.h>
+#include <stddef.h>
 
 
-int vladutz_create_server_socket(int port);
+#define VLADUTZ_PORT 8080
+#define VLADUTZ_BACKLOG 10
 
-int vladutz_accept_connection(int server_socket);
+int vladutz_socket();
 
-int vladutz_receive_data(int socket, char *buffer, int buffer_size);
+int vladutz_bind(int sockfd, int port);
 
-int vladutz_send_data(int socket, const char *data, int data_length);
+int vladutz_listen(int sockfd);
 
-void vladutz_close_socket(int socket);
+int vladutz_accept(int sockfd);
 
 #endif //OS_2_PROJECT_NETWORK_H
